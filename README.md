@@ -43,5 +43,5 @@ Mặc dù Notebook thực hiện huấn luyện đa dạng các mô hình, kiế
 
 ## 📂 Cấu trúc Repo
 * `Final.ipynb`: Chứa toàn bộ code huấn luyện, biểu đồ so sánh (Bar chart, Line chart, Scatter plot) và log kết quả của 6 mô hình.
-
+* `requirements.txt`: Yêu cầu phiên bản cho torch và torchvision. 
 ---
