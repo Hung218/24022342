@@ -1,34 +1,47 @@
-# Phân loại ảnh trên tập dữ liệu CIFAR-100: Scratch vs. Fine-tuning
+# Phân loại ảnh CIFAR-100: Đánh giá Đa mô hình & Tiêu điểm ResNet-50
 
-Dự án này thực hiện một nghiên cứu so sánh toàn diện về hiệu năng của các kiến trúc mạng nơ-ron khác nhau trên tập dữ liệu CIFAR-100 đầy thách thức.
+Repo này lưu trữ Notebook thực nghiệm phân loại tập dữ liệu **CIFAR-100**, so sánh giữa các kiến trúc CNN truyền thống và các mô hình Transformer hiện đại.
 
-## 📌 Tổng quan dự án
-Mục tiêu chính là đánh giá hai chiến lược huấn luyện quan trọng trong Deep Learning:
-1. **Huấn luyện từ đầu (Training from Scratch)**: Xây dựng và huấn luyện mô hình với trọng số ngẫu nhiên trên ảnh gốc 32x32 (SimpleCNN, VGG19, ResNet50).
-2. **Tinh chỉnh (Fine-tuning)**: Sử dụng các mô hình Pre-trained (VGG19, ResNet50, CoCa) đã học từ các tập dữ liệu khổng lồ, sau đó tinh chỉnh trên ảnh CIFAR-100 đã được resize lên 224x224.
+## Nội dung thực nghiệm
+Notebook `Final.ipynb` thực hiện huấn luyện và so sánh đồng thời **6 cấu hình mô hình**:
+1.  **SimpleCNN**: Mô hình cơ sở (Baseline).
+2.  **VGG-19 (Scratch)**: Huấn luyện từ đầu trên ảnh 32x32.
+3.  **VGG-19 (Fine-tune)**: Tinh chỉnh từ trọng số ImageNet (224x224).
+4.  **ResNet-50 (Scratch)**: Huấn luyện từ đầu trên ảnh 32x32.
+5.  **ResNet-50 (Fine-tune)**: Tinh chỉnh từ trọng số ImageNet (224x224).
+6.  **CoCa (Transformer)**: Mô hình đa phương thức tiên tiến.
 
-## 🏗️ Các mô hình được so sánh
-- **SimpleCNN**: Mô hình cơ sở (Baseline) tự xây dựng với 3 lớp tích chập.
-- **VGG19 & ResNet50**: Đại diện cho kiến trúc CNN sâu truyền thống (đánh giá cả hai phương pháp Scratch và Fine-tuning).
-- **CoCa (ViT-B-32)**: Mô hình hiện đại (Foundation Model) từ OpenCLIP, kết hợp giữa Vision Transformer và ngôn ngữ.
+---
 
-## 📊 Kết quả thực nghiệm chính
-| Mô hình | Chiến lược | Độ chính xác (Test Acc) | Tham số (Params) |
+## Kết quả tổquát
+Dưới đây là bảng so sánh hiệu năng trích xuất từ quá trình thực nghiệm:
+
+| Mô hình | Chiến lược | Accuracy | Ghi chú |
 | :--- | :--- | :--- | :--- |
-| **CoCa_Finetune** | Fine-tuning | XX.XX% | 512-dim |
-| **ResNet50_Finetune** | Fine-tuning | XX.XX% | 23.5M |
-| **SimpleCNN** | Scratch | 49.40% | ~1.0M |
-| ... | ... | ... | ... |
+| **ResNet-50** | **Fine-tuning** | **81.99%** | **Mô hình đề xuất** |
+| CoCa | Fine-tuning | 74.83% | Transformer SOTA |
+| VGG-19 | Fine-tuning | 73.93% | Pre-trained |
+| ResNet-50 | Scratch | 71.72% | Huấn luyện từ đầu |
+| VGG-19 | Scratch | 64.53% | Huấn luyện từ đầu |
+| SimpleCNN | Scratch | 52.94% | Baseline |
 
-*(Lưu ý: Bạn hãy điền các con số chính xác từ bảng kết quả cuối cùng trong Notebook của bạn vào đây)*
+---
 
-## 📂 Cấu trúc thư mục
-- `notebooks/`: Chứa file `final.ipynb`.
-- `results/`: Chứa các biểu đồ PNG về Loss, Accuracy và bảng so sánh.
-- `report.pdf`: Báo cáo chi tiết bằng tiếng Việt (8-12 trang).
-- `requirements.txt`: Danh sách các thư viện cần thiết để chạy dự án.
+## Lý do lựa chọn ResNet-50 cho báo cáo chuyên sâu
+Mặc dù Notebook thực hiện huấn luyện đa dạng các mô hình, kiến trúc **ResNet-50 ** được lựa chọn làm trọng tâm báo cáo vì những lý do sau:
 
-## 🛠️ Hướng dẫn cài đặt và chạy
-1. Sao chép kho lưu trữ:
-   ```bash
-   git clone [https://github.com/ten-cua-ban/ten-repository.git](https://github.com/ten-cua-ban/ten-repository.git)
+1.  **Hiệu năng vượt trội:** ResNet_50 (Fine_tuning) Đạt độ chính xác cao nhất (81.99%), vượt qua cả kiến trúc Transformer hiện đại là CoCa. Trong khi đó ResNet_50 (Scratch) cũng có kết quả vượt trội so với các kiến trúc được huấn luyện từ đầu khác.
+2.  **Tính hiệu quả (Efficiency):** ResNet-50 (~23.5M tham số) nhỏ gọn hơn gấp 6 lần so với VGG-19 (>140M tham số) nhưng lại mang lại kết quả tốt hơn hẳn.
+3.  **Độ ổn định:** Biểu đồ huấn luyện cho thấy ResNet-50 có tốc độ hội tụ nhanh nhất và đường Loss mượt mà nhất, chứng minh khả năng tối ưu hóa cực tốt của các kết nối Residual.
+
+---
+
+## Yêu cầu hệ thống
+* **Framework:** PyTorch, Torchvision.
+* **GPU:** Khuyến khích sử dụng Tesla P100 hoặc T4.
+* **Dữ liệu:** Tự động tải thông qua Torchvision Datasets.
+
+## 📂 Cấu trúc Repo
+* `Final.ipynb`: Chứa toàn bộ code huấn luyện, biểu đồ so sánh (Bar chart, Line chart, Scatter plot) và log kết quả của 6 mô hình.
+
+---
